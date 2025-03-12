@@ -165,7 +165,7 @@ $ ls /nix/store
 
 # A common question: Nix vs Docker
 
-The main difference is *docker* is repeatable but not reproducible why *nix* is reproducible and deterministic.
+The main difference is *docker* is repeatable but not reproducible, while *nix* is reproducible and deterministic?
 
 Remember the compiling of hello world example using nix, now let's do the same thing with a Dockerfile.
 
@@ -183,7 +183,7 @@ CMD [ "hello" ]
 # ^^^^^^^^^^^^^ Assumes the `hello` package puts `hello` binary on the $PATH, which may change
 ```
 
-Dockerfiles and what they describe is intrinsically detached from each other, which is not the case for nix derivations, a derivation is always going to produce the same binary.
+Dockerfiles and what they describe is intrinsically detached from each other, which is not the case for nix derivations, a nix code is always going to produce the same derivation and %99.9 of the time same binary (exceptions apply).
 
 ```bash
 $ docker save $(docker build --no-cache -q .) -o foo1.tar
@@ -281,6 +281,39 @@ Since this is a flake, a `flake.lock` will be generated and thus latest will be 
 
 <!-- end_slide -->
 
+# Example 4: Cross compile using Nix
+
+Cross compilation is generally problematic and need special care in most cases. Nix makes it easier through a function called `pkgsCross`
+
+```bash
+$ nix build nixpkgs#pkgsCross.riscv64.hello -L
+> 
+ ...
+ hello-riscv64-unknown-linux-gnu> gzipping man pages under /nix/store/jnib1f5z0q1adp29yskrw24xas7532xc-hello-riscv64-unknown-linux-gnu-2.12.1/share/man/
+ hello-riscv64-unknown-linux-gnu> patching script interpreter paths in /nix/store/jnib1f5z0q1adp29yskrw24xas7532xc-hello-riscv64-unknown-linux-gnu-2.12.1
+ hello-riscv64-unknown-linux-gnu> stripping (with command riscv64-unknown-linux-gnu-strip and flags -S -p) in  /nix/store/jnib1f5z0q1adp29yskrw24xas7532xc-hello-riscv64-unknown-linux-gnu-2.12.1/bin
+```
+
+<!-- end_slide -->
+
+# Example 5: `nix-shell`: trying before buying
+
+No global state changes means temporary environments are very easy to achieve. If you only need to try something and do not polute your system `$PATH`, `nix-shell -p <PACKAGE_NAME>` is available.
+
+
+```bash
+$ file
+> file: command not found
+$ nix-shell -p file
+> Usage: file [-bcCdEhikLlNnprsSvzZ0] [--apple] [--extension] [--mime-encoding]
+            [--mime-type] [-e <testname>] [-F <separator>]  [-f <namefile>]
+            [-m <magicfiles>] [-P <parameter=value>] [--exclude-quiet]
+            <file> ...
+       file -C [-m <magicfiles>]
+       file [--help]
+```
+
+<!-- end_slide -->
 # Reference
 
 [1]  Wikipedia contributors. (2024, November 12). Infrastructure as code. Wikipedia. https://en.wikipedia.org/wiki/Infrastructure_as_code
