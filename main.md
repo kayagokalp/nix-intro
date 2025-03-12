@@ -286,5 +286,3 @@ Since this is a flake, a `flake.lock` will be generated and thus latest will be 
 [1]  Wikipedia contributors. (2024, November 12). Infrastructure as code. Wikipedia. https://en.wikipedia.org/wiki/Infrastructure_as_code
 
 [2]  Marakasov, D. (n.d.). Repository statistics - Repology. https://repology.org/repositories/statistics/total
-
-<!-- end_slide -->
